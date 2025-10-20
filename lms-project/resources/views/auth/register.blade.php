@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.logreg')
 
 @section('title', 'Register - POS Admin')
 

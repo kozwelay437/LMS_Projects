@@ -1,4 +1,4 @@
-@extends('layouts.app') {{-- optional, if you have a layout file --}}
+@extends('layouts.logreg') {{-- optional, if you have a layout file --}}
 @section('title', 'POS Admin Dashboard')
 
 @section('content')

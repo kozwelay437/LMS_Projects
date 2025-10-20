@@ -28,4 +28,14 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
-
+Route::get('/index', [PageController::class, 'home'])->name('index');
+Route::get('/assignCalendar', [PageController::class, 'assignCalendar'])->name('assignCalendar');
+Route::get('/assignment', [PageController::class, 'assignment'])->name('assignment');
+Route::get('/studentAssignment', [PageController::class, 'studentAssignment'])->name('studentAssignment');
+Route::get('/event', [PageController::class, 'events'])->name('event');
+Route::get('/department/it', [PageController::class, 'it']);
+Route::get('/department/ep', [PageController::class, 'ep']);
+Route::get('/department/ec', [PageController::class, 'ec']);
+Route::get('/department/ie', [PageController::class, 'ie']);
+Route::get('/department/me', [PageController::class, 'me']);
+Route::get('/department/civil', [PageController::class, 'civil']);
