@@ -11,15 +11,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+       Schema::create('users', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('email')->unique();
+    $table->string('password');
+    //  Role: teacher or student
+    $table->enum('role', ['Admin', 'teacher', 'student'])->default('student');
+    //  Additional useful info
+    $table->string('phone')->nullable();
+    $table->string('address')->nullable();
+
+    // 👇 For teachers
+    $table->string('department')->nullable(); // Example: IT, Civil, etc.
+    $table->string('designation')->nullable(); // Example: Lecturer, Assistant Professor
+
+    // 👇 For students
+    $table->string('roll_no')->nullable();
+    $table->string('year')->nullable(); // Example: 1st Year, 2nd Year
+    $table->string('status')->nullable();
+    $table->string('major')->nullable(); // Example: IT, Electrical, Mechanical
+    
+    // Laravel defaults
+    $table->rememberToken();
+    $table->timestamps();
+});
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

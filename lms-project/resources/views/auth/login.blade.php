@@ -2,6 +2,19 @@
 @section('title', 'POS Admin Dashboard')
 
 @section('content')
+@if(session('login_required'))
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+Swal.fire({
+  icon: 'warning',
+  title: 'Login Required',
+  text: 'Please login first to access this section.',
+  confirmButtonText: 'OK',
+  confirmButtonColor: '#1a3a6b'
+});
+</script>
+@endif
+
 <div class="container">
 
     <!-- Outer Row -->
@@ -21,53 +34,52 @@
 
                                 {{-- Laravel Login Form --}}
                                 <form class="user" method="POST" action="{{ route('login') }}">
-                                    @csrf
+    @csrf
 
-                                    <div class="form-group">
-                                        <input 
-                                            type="email" 
-                                            class="form-control form-control-user @error('email') is-invalid @enderror"
-                                            id="email" 
-                                            name="email" 
-                                            value="{{ old('email') }}" 
-                                            required 
-                                            autofocus
-                                            placeholder="Enter Email Address...">
-                                        @error('email')
-                                            <span class="text-danger small">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+    <div class="form-group">
+        <input 
+            type="email" 
+            class="form-control form-control-user @error('email') is-invalid @enderror"
+            id="email" 
+            name="email" 
+            value="{{ old('email') }}" 
+            required 
+            autofocus
+            placeholder="Enter Email Address...">
+        @error('email')
+            <span class="text-danger small">{{ $message }}</span>
+        @enderror
+    </div>
 
-                                    <div class="form-group">
-                                        <input 
-                                            type="password" 
-                                            class="form-control form-control-user @error('password') is-invalid @enderror"
-                                            id="password" 
-                                            name="password" 
-                                            required
-                                            placeholder="Password">
-                                        @error('password')
-                                            <span class="text-danger small">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+    <div class="form-group">
+        <input 
+            type="password" 
+            class="form-control form-control-user @error('password') is-invalid @enderror"
+            id="password" 
+            name="password" 
+            required
+            placeholder="Password">
+        @error('password')
+            <span class="text-danger small">{{ $message }}</span>
+        @enderror
+    </div>
 
-                                    <button type="submit" class="btn btn-primary btn-user btn-block">
-                                        Login
-                                    </button>
-                                    <hr>
+    {{-- Forgot Password Link --}}
+    <div class="text-right mb-3">
+        <a class="small" href="{{ route('resetPassword') }}">Forgot Password?</a>
+    </div>
 
-                                    {{-- Social login links (optional) --}}
-                                    <a href="{{ route('login.google') }}" class="btn btn-google btn-user btn-block">
-                                        <i class="fab fa-google fa-fw"></i> Login with Google
-                                    </a>
+    <button type="submit" class="btn btn-primary btn-user btn-block">
+        Login
+    </button>
+    <hr>
 
-                                    {{-- Uncomment if GitHub login available --}}
-                                    {{--
-                                    <a href="{{ route('login.github') }}" class="btn btn-dark btn-user btn-block">
-                                        <i class="fa-brands fa-github fa-fw"></i> Login with GitHub
-                                    </a>
-                                    --}}
-                                </form>
+    {{-- Social login links (optional) --}}
+    <a href="{{ route('login.google') }}" class="btn btn-google btn-user btn-block">
+        <i class="fab fa-google fa-fw"></i> Login with Google
+    </a>
+</form>
+
                                 <hr>
 
                                 <div class="text-center">
@@ -84,4 +96,5 @@
     </div>
 
 </div>
+
 @endsection

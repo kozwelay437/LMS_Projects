@@ -33,7 +33,9 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item"><a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/index') }}">Home</a></li>
           <li class="nav-item"><a class="nav-link {{ Request::is('about') ? 'active' : '' }}" href="{{ url('/about') }}">About</a></li>
+          @auth
           <li class="nav-item"><a class="nav-link {{ Request::is('assignments') ? 'active' : '' }}" href="{{ url('/studentAssignment') }}">Assignments</a></li>
+          @endauth
           <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="departmentDropdown" 
      role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -48,17 +50,11 @@
     <li><a class="dropdown-item" href="{{ url('/department/ep') }}">Electrical Power</a></li>
   </ul>
 </li>
-
+        @auth
           <li class="nav-item"><a class="nav-link {{ Request::is('events') ? 'active' : '' }}" href="{{ url('/event') }}">Events</a></li>
+        @endauth
         </ul>
-                    <div class="d-flex align-items-center gap-2">
-                        <form class="d-flex me-3" role="search">
-                            <input class="form-control form-control-sm search-input" type="search"
-                                placeholder="Search..." aria-label="Search">
-                        </form>
-                        <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">Login</a>
-                        <a href="{{ route('register') }}" class="btn btn-outline-secondary btn-sm">Sign Up</a>
-                    </div>
+                    
                 </div>
             </div>
         </nav>

@@ -56,34 +56,74 @@
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/index') }}">Home</a></li>
-          <li class="nav-item"><a class="nav-link {{ Request::is('about') ? 'active' : '' }}" href="{{ url('/about') }}">About</a></li>
-          <li class="nav-item"><a class="nav-link {{ Request::is('assignments') ? 'active' : '' }}" href="{{ url('/studentAssignment') }}">Assignments</a></li>
-          <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="departmentDropdown" 
-     role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Departments
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="departmentDropdown">
-    <li><a class="dropdown-item" href="{{ url('/department/it') }}">Information Technology</a></li>
-    <li><a class="dropdown-item" href="{{ url('/department/civil') }}">Civil Engineering</a></li>
-    <li><a class="dropdown-item" href="{{ url('/department/me') }}">Mechanical Engineering</a></li>
-    <li><a class="dropdown-item" href="{{ url('/department/ie') }}">Industrial Engineering</a></li>
-    <li><a class="dropdown-item" href="{{ url('/department/ec') }}">Electronics & Communication</a></li>
-    <li><a class="dropdown-item" href="{{ url('/department/ep') }}">Electrical Power</a></li>
-  </ul>
-</li>
+    <li class="nav-item"><a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/index') }}">Home</a></li>
+    <li class="nav-item"><a class="nav-link {{ Request::is('about') ? 'active' : '' }}" href="{{ url('/about') }}">About</a></li>
 
-          <li class="nav-item"><a class="nav-link {{ Request::is('events') ? 'active' : '' }}" href="{{ url('/event') }}">Events</a></li>
-        </ul>
+    @auth
+        <li class="nav-item"><a class="nav-link {{ Request::is('assignments') ? 'active' : '' }}" href="{{ url('/studentAssignment') }}">Assignments</a></li>
+    @endauth
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="departmentDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Departments
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="departmentDropdown">
+                <li><a class="dropdown-item" href="{{ url('/department/it') }}">Information Technology</a></li>
+                <li><a class="dropdown-item" href="{{ url('/department/civil') }}">Civil Engineering</a></li>
+                <li><a class="dropdown-item" href="{{ url('/department/me') }}">Mechanical Engineering</a></li>
+                <li><a class="dropdown-item" href="{{ url('/department/ie') }}">Industrial Engineering</a></li>
+                <li><a class="dropdown-item" href="{{ url('/department/ec') }}">Electronics & Communication</a></li>
+                <li><a class="dropdown-item" href="{{ url('/department/ep') }}">Electrical Power</a></li>
+            </ul>
+        </li>
+    @auth
+        <li class="nav-item"><a class="nav-link {{ Request::is('events') ? 'active' : '' }}" href="{{ url('/event') }}">Events</a></li>
+    @endauth
+</ul>
+
 
         <div class="d-flex align-items-center gap-2">
-          <form class="d-flex me-3" role="search">
-            <input class="form-control form-control-sm search-input" type="search" placeholder="Search..." aria-label="Search">
-          </form>
-          <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">Login</a>
-          <a href="{{ route('register') }}" class="btn btn-outline-secondary btn-sm">Sign Up</a>
+    <form class="d-flex me-3" role="search">
+        <input class="form-control form-control-sm search-input" type="search" placeholder="Search..." aria-label="Search">
+    </form>
+
+    @guest
+        <!-- Guest: show login/signup -->
+        <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">Login</a>
+        <a href="{{ route('register') }}" class="btn btn-outline-secondary btn-sm">Sign Up</a>
+    @else
+        <!-- Authenticated user: show profile dropdown -->
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ Auth::user()->name }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+                @if(Auth::user()->role == 'Admin')
+                    <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                
+                @elseif(Auth::user()->role == 'student')
+                    <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                @elseif(Auth::user()->role == 'teacher')
+                    <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                @endif
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                       Logout
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
+            </ul>
         </div>
+    @endguest
+</div>
+
       </div>
     </div>
   </nav>

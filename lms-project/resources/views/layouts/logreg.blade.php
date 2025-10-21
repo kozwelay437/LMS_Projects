@@ -40,5 +40,6 @@
 
     <!-- SB Admin 2 JS -->
     <script src="{{ asset('admin/js/sb-admin-2.min.js') }}"></script>
+
 </body>
 </html>
