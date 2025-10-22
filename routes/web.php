@@ -9,6 +9,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/assignments/document/{filename}', function ($filename) {
+    $path = storage_path('app/public/' . $filename);
+    return response()->file($path);
+});
+
 Route::prefix('teacher')->name('teacher.')->group(function () {
     Route::resource('assignments', AssignmentController::class);
 });

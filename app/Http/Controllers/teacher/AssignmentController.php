@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Assignment;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class AssignmentController extends Controller
@@ -23,37 +24,57 @@ class AssignmentController extends Controller
 
     public function store(Request $request)
 {
+    // ✅ Validate base assignment fields
     $validated = $request->validate([
         'assignment_title' => 'required|string|max:255',
         'description' => 'nullable|string',
         'document' => 'nullable|file|mimes:pdf,doc,docx,xlsx|max:2048',
         'upload_date' => 'required|date',
         'due_date' => 'required|date|after_or_equal:upload_date',
-        'questions' => 'required|array|min:1',
-        'questions.*.question' => 'required|string',
-        'questions.*.type' => 'required|in:text,mcq',
+        'questions' => 'nullable|array',
+        'questions.*.question' => 'required_with:questions|string',
+        'questions.*.type' => 'required_with:questions|in:text,mcq',
         'questions.*.options' => 'nullable|array',
         'questions.*.correct' => 'nullable|string',
     ]);
 
+    // ✅ Handle file upload with readable name
     if ($request->hasFile('document')) {
-        $validated['document'] = $request->file('document')->store('assignments');
+        $file = $request->file('document');
+        // Create a friendly filename: assignment-title-timestamp.extension
+        $filename = Str::slug($request->assignment_title) . '-' . time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('assignments', $filename, 'public');
+        $validated['document'] = $path;
     }
 
-    $assignment = Assignment::create($validated);
+    // ✅ Create the assignment
+    $assignment = Assignment::create([
+        'assignment_title' => $validated['assignment_title'],
+        'description' => $validated['description'] ?? null,
+        'document' => $validated['document'] ?? null,
+        'upload_date' => $validated['upload_date'],
+        'due_date' => $validated['due_date'],
+    ]);
 
-    foreach ($validated['questions'] as $q) {
-        Question::create([
-            'assignment_id' => $assignment->id,
-            'type' => $q['type'],
-            'question' => $q['question'],
-            'options' => $q['type'] === 'mcq' ? $q['options'] : null,
-            'correct_answer' => $q['type'] === 'mcq' ? $q['correct'] : null,
-        ]);
+    // ✅ Save questions if any exist
+    if (!empty($validated['questions'])) {
+        foreach ($validated['questions'] as $q) {
+            Question::create([
+                'assignment_id' => $assignment->id,
+                'type' => $q['type'],
+                'question' => $q['question'],
+                'options' => $q['type'] === 'mcq' ? json_encode($q['options']) : null,
+                'correct_answer' => $q['type'] === 'mcq' ? $q['correct'] : null,
+            ]);
+        }
     }
 
-    return redirect()->route('teacher.assignments.index')->with('success', 'Assignment and questions saved!');
+    // ✅ Redirect with success message
+    return redirect()
+        ->route('teacher.assignments.index')
+        ->with('success', 'Assignment saved successfully!');
 }
+
 
     public function show(Assignment $assignment)
     {
