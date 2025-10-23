@@ -9,13 +9,15 @@ class Assignment extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'assignment_title',
-        'description',
-        'document',
-        'upload_date',
-        'due_date',
-    ];
+   protected $fillable = [
+    'assignment_title',
+    'description',
+    'document',
+    'original_name',
+    'upload_date',
+    'due_date',
+];
+
 
     protected $casts = [
         'upload_date' => 'datetime',

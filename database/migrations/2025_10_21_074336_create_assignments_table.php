@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('assignment_title');
             $table->text('description')->nullable();
-            $table->string('document')->nullable();
+            // $table->string('original_name')->nullable();
             $table->date('upload_date');
             $table->date('due_date');
             $table->timestamps();

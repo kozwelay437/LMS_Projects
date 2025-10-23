@@ -29,14 +29,15 @@
             <td>{{ $assignment->upload_date->format('d M Y') }}</td>
             <td>{{ $assignment->due_date->format('d M Y') }}</td>
             <td>
-            @if($assignment->document)
-                <a href="{{ asset('storage/' . $assignment->document) }}" target="_blank">
-                    {{ basename($assignment->document) }}
-                </a>
-            @else
-                <em>No file</em>
-            @endif
-            </td>
+    @if($assignment->document)
+        <a href="{{ asset('storage/' . $assignment->document) }}">
+            {{ $assignment->original_name ?? basename($assignment->document) }}
+        </a>
+    @else
+        <em>No file</em>
+    @endif
+</td>
+
             <td>
                 <a href="{{ route('teacher.assignments.show', $assignment) }}" class="btn btn-sm btn-info">View</a>
                 <a href="{{ route('teacher.assignments.edit', $assignment) }}" class="btn btn-sm btn-warning">Edit</a>

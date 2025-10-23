@@ -22,9 +22,8 @@ class AssignmentController extends Controller
         return view('teacher.assignments.create');
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
 {
-    // ✅ Validate base assignment fields
     $validated = $request->validate([
         'assignment_title' => 'required|string|max:255',
         'description' => 'nullable|string',
@@ -38,25 +37,20 @@ class AssignmentController extends Controller
         'questions.*.correct' => 'nullable|string',
     ]);
 
-    // ✅ Handle file upload with readable name
+    // ✅ Handle file upload
     if ($request->hasFile('document')) {
         $file = $request->file('document');
-        // Create a friendly filename: assignment-title-timestamp.extension
         $filename = Str::slug($request->assignment_title) . '-' . time() . '.' . $file->getClientOriginalExtension();
         $path = $file->storeAs('assignments', $filename, 'public');
+
         $validated['document'] = $path;
+        $validated['original_name'] = $file->getClientOriginalName();
     }
 
-    // ✅ Create the assignment
-    $assignment = Assignment::create([
-        'assignment_title' => $validated['assignment_title'],
-        'description' => $validated['description'] ?? null,
-        'document' => $validated['document'] ?? null,
-        'upload_date' => $validated['upload_date'],
-        'due_date' => $validated['due_date'],
-    ]);
+    // ✅ Create the assignment (saves original_name too)
+    $assignment = Assignment::create($validated);
 
-    // ✅ Save questions if any exist
+    // ✅ Save questions if any
     if (!empty($validated['questions'])) {
         foreach ($validated['questions'] as $q) {
             Question::create([
@@ -69,7 +63,6 @@ class AssignmentController extends Controller
         }
     }
 
-    // ✅ Redirect with success message
     return redirect()
         ->route('teacher.assignments.index')
         ->with('success', 'Assignment saved successfully!');
