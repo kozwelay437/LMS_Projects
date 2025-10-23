@@ -31,7 +31,7 @@
 
       {{-- Document --}}
       <div class="mb-3">
-        <label>Document (optional)</label>
+        <label>Document </label>
         <input type="file" name="document" class="form-control">
       </div>
 
