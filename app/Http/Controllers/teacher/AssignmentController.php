@@ -69,6 +69,8 @@ class AssignmentController extends Controller
 }
 
 
+
+
     public function show(Assignment $assignment)
     {
         return view('teacher.assignments.show', compact('assignment'));
