@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\teacher\AssignmentController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AdminController;
 
@@ -9,6 +10,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/assignments/document/{filename}', function ($filename) {
+    $path = storage_path('app/public/' . $filename);
+    return response()->file(file: $path);
+});
+
+Route::prefix('teacher')->name('teacher.')->group(function () {
+    Route::resource('assignments', AssignmentController::class);
+});
 
 
 // Show login page
